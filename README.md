@@ -21,4 +21,8 @@ Este projeto é um sistema simples para gerenciar alunos e cursos. Ele permite o
 - **Vinculação de Aluno a Cursos**: Adiciona um curso à lista de cursos de um aluno.
 - **Busca de Alunos por Curso**: Permite buscar todos os alunos vinculados a um curso específico.
 
-![Diagrama de Classes](img/Untitled diagram-2024-11-04-224953.png)
+## Diagrama de Classes
+<img src="img/diagrama-aluno-curso.png.png" alt="Diagrama de Classes" width="200"/>
+
+
+
