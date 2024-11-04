@@ -34,10 +34,10 @@ public class AlunoService {
 
 	public void adicionarAluno(Aluno aluno) {
 		// Verifica se o aluno já existe
-	    if (alunoRepository.existsByCpf(aluno.getCpf())) {
-	        throw new IllegalArgumentException("Aluno com CPF já cadastrado.");
-	    }
-	    
+		if (alunoRepository.existsByCpf(aluno.getCpf())) {
+			throw new IllegalArgumentException("Aluno com CPF já cadastrado.");
+		}
+
 		Set<ConstraintViolation<Aluno>> violations = validator.validate(aluno);
 		if (!violations.isEmpty()) {
 			StringBuilder errorMessage = new StringBuilder("Erro de validação:");
@@ -59,18 +59,33 @@ public class AlunoService {
 	}
 
 	public void atualizarAluno(Aluno aluno) {
-		// Validação e lógica para atualizar
-		alunoRepository.save(aluno); // Salva as alterações
+		// Verifica se o aluno existe
+		if (!alunoRepository.existsById(aluno.getId())) {
+			throw new RuntimeException("Aluno não encontrado com o ID: " + aluno.getId());
+		}
+		
+		// Validação do aluno
+		Set<ConstraintViolation<Aluno>> violations = validator.validate(aluno);
+		if (!violations.isEmpty()) {
+			StringBuilder errorMessage = new StringBuilder("Erro de validação:");
+			for (ConstraintViolation<Aluno> violation : violations) {
+				errorMessage.append("\n").append(violation.getMessage());
+			}
+			throw new IllegalArgumentException(errorMessage.toString());
+		}
+		
+		// Salva as alterações
+		alunoRepository.save(aluno);
 	}
 
 	public void deletarAluno(Long id) {
 		alunoRepository.deleteById(id); // Remove o aluno pelo ID
 	}
-	
+
 	public List<Aluno> buscarAlunosPorCurso(Long cursoId) {
 		return alunoRepository.findAlunosByCursoId(cursoId); // Busca alunos pelo id do curso
 	}
-	
+
 	// Vincular um aluno à um curso
 	public Aluno vincularAlunoACurso(Long alunoId, Long cursoId) {
 		Aluno aluno = alunoRepository.findById(alunoId).orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
